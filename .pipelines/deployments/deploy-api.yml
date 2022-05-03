@@ -11,7 +11,7 @@ stages:
   variables:
   - group: calculator-dev
   jobs:
-  - template: templates/build-web-app.yml
+  - template: ../templates/build-web-app.yml
     parameters: 
       projects: $(projects)
       buildConfiguration: $(buildConfiguration)
@@ -26,7 +26,7 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
-    - template: templates/deploy-web-app.yml
+    - template: ../templates/deploy-web-app.yml
       parameters: 
         azureSubscription: 'VSP'
         appName: $(appName)

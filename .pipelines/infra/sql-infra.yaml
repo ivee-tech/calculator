@@ -6,7 +6,7 @@ stages:
   variables:
   - group: calculator-common
   jobs:
-  - template: templates/validate-publish-ARM-template.yml
+  - template: ../templates/validate-publish-ARM-template.yml
     parameters: 
       azureSubscription: 'VSP'
       resourceGroup: $(resourceGroup)
@@ -17,7 +17,7 @@ stages:
   - group: calculator-dev
   - group: calculator-dev-kv
   jobs:
-  - template: templates/deploy-sql-infra.yml
+  - template: ../templates/deploy-sql-infra.yml
     parameters:
       azureSubscription: 'VSP'
       resourceGroup: $(resourceGroup)

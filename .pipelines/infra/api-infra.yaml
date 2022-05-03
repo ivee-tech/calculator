@@ -4,9 +4,9 @@ trigger:
 stages:
 - stage: Validate_Publish_ARM_Template
   variables:
-  - group: zipzapp-metadata
+  - group: calculator-common
   jobs:
-  - template: templates/validate-publish-ARM-template.yml
+  - template: ../templates/validate-publish-ARM-template.yml
     parameters: 
       azureSubscription: 'VSP'
       resourceGroup: $(resourceGroup)
@@ -16,7 +16,7 @@ stages:
   variables:
   - group: calculator-dev
   jobs:
-  - template: templates/deploy-web-app-infra.yml
+  - template: ../templates/deploy-web-app-infra.yml
     parameters:
       azureSubscription: 'VSP'
       resourceGroup: $(resourceGroup)
