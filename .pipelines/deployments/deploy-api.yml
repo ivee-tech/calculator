@@ -28,7 +28,7 @@ stages:
     steps:
     - template: templates/deploy-web-app.yml
       parameters: 
-        azureSubscription: 'Visual Studio Professional'
+        azureSubscription: 'VSP'
         appName: $(appName)
         webProjName: $(webProjName)
     condition: succeeded()

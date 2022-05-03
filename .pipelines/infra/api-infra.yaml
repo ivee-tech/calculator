@@ -8,7 +8,7 @@ stages:
   jobs:
   - template: templates/validate-publish-ARM-template.yml
     parameters: 
-      azureSubscription: 'Visual Studio Professional'
+      azureSubscription: 'VSP'
       resourceGroup: $(resourceGroup)
       location: $(location)
       armTemplate: $(webAppArmTemplate)
@@ -18,7 +18,7 @@ stages:
   jobs:
   - template: templates/deploy-web-app-infra.yml
     parameters:
-      azureSubscription: 'Visual Studio Professional'
+      azureSubscription: 'VSP'
       resourceGroup: $(resourceGroup)
       location: $(location)
       webAppArmTemplate: $(webAppArmTemplate)
