@@ -23,14 +23,14 @@ jobs:
       azureSubscription: '${{ parameters.azureSubscription }}'
       resourceGroupName: '${{ parameters.resourceGroup }}'
       location: '${{ parameters.location }}'
-      csmFile: ../../infra/${{ parameters.armTemplate }}/${{ parameters.armTemplateFileName }}
-      csmParametersFile: ../../infra/${{ parameters.armTemplate }}/${{ parameters.templateParametersFileName }}
+      csmFile: '$(Pipeline.Workspace)/s/infra/${{ parameters.armTemplate }}/${{ parameters.armTemplateFileName }}'
+      csmParametersFile: '$(Pipeline.Workspace)/s/infra/${{ parameters.armTemplate }}/${{ parameters.templateParametersFileName }}'
       deploymentMode: Validation
 
   - task: CopyFiles@2
     displayName: 'Copy ARM Templates'
     inputs:
-      SourceFolder: '../../infra/${{ parameters.armTemplate }}'
+      SourceFolder: '$(Pipeline.Workspace)/s/infra/${{ parameters.armTemplate }}'
       Contents: |
         **/*.bicep
         **/*.json
