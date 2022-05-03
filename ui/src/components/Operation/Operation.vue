@@ -93,57 +93,80 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-
-const ns: string = 'operation';
-const cns: string = 'config';
+import axios from "axios";
+import { StoreService } from "@/services/store-service";
 
 @Component
 export default class Operation extends Vue {
+  operationResult: { result: number; errorMessage: string } = {
+    result: 0,
+    errorMessage: "",
+  };
+  operationLoading: boolean = false;
+
+  private storeSvc: StoreService = new StoreService();
+  private config: any;
 
   constructor() {
     super();
   }
 
   mounted() {
-    // this.getConfigData();
-    console.log();
+    this.config = this.storeSvc.getConfig();
   }
 
-r(c: string) {
-  const expr: any = document.getElementById("txtExpr");
-  expr.value += c;
-}
-
-clearText() {
-  const expr: any = document.getElementById("txtExpr");
-  expr.value = "";
-  let divError = document.getElementById("error") as HTMLDivElement;
-  divError.innerText = "";
-}
-
-removeLastChar() {
-  let expr: any = document.getElementById("txtExpr");
-  if (expr.value.length >= 1) {
-    let value = expr.value.substring(0, expr.value.length - 1);
-    expr.value = value;
+  r(c: string) {
+    const expr: any = document.getElementById("txtExpr");
+    expr.value += c;
   }
-}
-toggleSpinner() {
-  const spinner = document.getElementById("spinner") as HTMLSpanElement;
-  if (spinner.style.display === "none") spinner.style.display = "";
-  else spinner.style.display = "none";
-}
 
-isSpinnerHidden() {
-  const spinner = document.getElementById("spinner") as HTMLSpanElement;
-  return spinner.style.display === "none";
-}
+  clearText() {
+    const expr: any = document.getElementById("txtExpr");
+    expr.value = "";
+    let divError = document.getElementById("error") as HTMLDivElement;
+    divError.innerText = "";
+  }
 
-loadResult() {
-  let txtExpr: any = document.getElementById("txtExpr") as HTMLInputElement;
-  let expr = encodeURIComponent(txtExpr.value);
-}
+  removeLastChar() {
+    let expr: any = document.getElementById("txtExpr");
+    if (expr.value.length >= 1) {
+      let value = expr.value.substring(0, expr.value.length - 1);
+      expr.value = value;
+    }
+  }
+  toggleSpinner() {
+    const spinner = document.getElementById("spinner") as HTMLSpanElement;
+    if (spinner.style.display === "none") spinner.style.display = "";
+    else spinner.style.display = "none";
+  }
 
+  isSpinnerHidden() {
+    const spinner = document.getElementById("spinner") as HTMLSpanElement;
+    return spinner.style.display === "none";
+  }
+
+  loadResult() {
+    let txtExpr: any = document.getElementById("txtExpr") as HTMLInputElement;
+    let expr = encodeURIComponent(txtExpr.value);
+    this.operationLoading = true;
+    axios
+      .post(`${this.config.apiBaseUrl}/Operation/execute`, {
+        expression: expr,
+      })
+      .then((response) => {
+        console.log(response);
+        this.operationResult = {
+          result: response.data.result,
+          errorMessage: "",
+        };
+        this.operationLoading = false;
+      })
+      .catch((error) => {
+        console.log(error);
+        this.operationResult = { result: 0, errorMessage: `${error.message} - ${error.response.data.detail}` };
+        this.operationLoading = false;
+      });
+  }
 }
 </script>
 

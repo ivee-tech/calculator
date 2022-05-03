@@ -10,6 +10,7 @@
   "dependencies": {
     "@azure/msal-browser": "^2.2.0",
     "@vueform/toggle": "^2.0.0",
+    "axios": "^0.27.2",
     "core-js": "^3.8.3",
     "dat-gui": "^0.5.0",
     "iv-3d-lib": "^1.0.31",

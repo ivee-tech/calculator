@@ -5,8 +5,8 @@ export class StoreService {
     private readonly s: StoreServiceUtils = new StoreServiceUtils();
 
     constructor() {
-        this.s.configKey = 'story-teller-3d-config';
-        this.s.accountKey = 'story-teller-3d-auth-account';
+        this.s.configKey = 'calculator-config';
+        this.s.accountKey = 'calculator-auth-account';
     }
     
     setConfig(config: any) : void {

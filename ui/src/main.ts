@@ -11,8 +11,8 @@ const storeSvc: StoreService = new StoreService();
 // let authSvc: AuthService;
 
 
-Vue.config.productionTip = false
-const $path = './assets/config/config.json';
+Vue.config.productionTip = (process.env.NODE_ENV === 'production');
+let $path = './assets/config/' + (Vue.config.productionTip ? 'config.json' : 'config.dev.json');
 fetch($path).then(response => {
   response.json().then(config => {
     console.log(config);

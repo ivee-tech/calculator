@@ -70,11 +70,11 @@ namespace Calculator.Web.Api.Controllers
         [HttpPost("execute")]
         public async Task<IActionResult> ExecuteAndLogOperation(OperationRequest request)
         {
-            var expression = request?.Expression;
-            if(string.IsNullOrEmpty(expression))
+            if(string.IsNullOrEmpty(request?.Expression))
             {
                 return BadRequest("Expression cannot be empty.");
             }
+            var expression = Uri.UnescapeDataString(request?.Expression);
             var success = true;
             var error = string.Empty;
             double result = 0;
