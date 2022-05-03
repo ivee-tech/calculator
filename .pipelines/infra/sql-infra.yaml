@@ -1,0 +1,35 @@
+trigger:
+  none
+
+resources:
+  repositories:
+  - repository: infrastructure
+    type: git
+    name: infrastructure
+
+stages:
+- stage: Validate_Publish_ARM_Template
+  variables:
+  - group: calculator-common
+  jobs:
+  - template: Pipelines/Templates/validate-publish-ARM-template.yml@infrastructure
+    parameters: 
+      azureSubscription: 'Visual Studio Professional'
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      armTemplate: $(sqlArmTemplate)
+- stage: Deploy_Sql_Dev
+  variables:
+  - group: calculator-dev
+  - group: calculator-dev-keys
+  jobs:
+  - template: 'Pipelines/Templates/deploy-sql-infra.yml@infrastructure'
+    parameters:
+      azureSubscription: 'Visual Studio Professional'
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      sqlArmTemplate: $(sqlArmTemplate)
+      dbServerName: $(dbServerName)
+      Settings_AppDB: $(dbName)
+      Settings_AppDBUser: $(dbUser)
+      Settings_AppDBPassword: $(dbPassword)

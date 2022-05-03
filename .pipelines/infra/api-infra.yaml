@@ -1,0 +1,34 @@
+trigger:
+  none
+
+resources:
+  repositories:
+  - repository: infrastructure
+    type: git
+    name: infrastructure
+
+stages:
+- stage: Validate_Publish_ARM_Template
+  variables:
+  - group: zipzapp-metadata
+  jobs:
+  - template: Pipelines/Templates/validate-publish-ARM-template.yml@infrastructure
+    parameters: 
+      azureSubscription: 'Visual Studio Professional'
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      armTemplate: $(webAppArmTemplate)
+- stage: Deploy_Web_App_Dev
+  variables:
+  - group: calculator-dev
+  jobs:
+  - template: 'Pipelines/Templates/deploy-web-app-infra.yml@infrastructure'
+    parameters:
+      azureSubscription: 'Visual Studio Professional'
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      webAppArmTemplate: $(webAppArmTemplate)
+      planName: $(planName)
+      appName: $(appName)
+      skuName: $(skuName)
+      skuCapacity: $(skuCapacity)

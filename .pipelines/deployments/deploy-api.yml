@@ -1,0 +1,39 @@
+trigger:
+  none
+
+resources:
+  repositories:
+  - repository: infrastructure
+    type: git
+    name: infrastructure
+variables:
+  buildConfiguration: Release
+  projects: '**/*.csproj'
+  testProjects: '**/*[Uu]nit[Tt]ests.csproj'
+
+stages:
+- stage: Build_Web_Api
+  variables:
+  - group: calculator-dev
+  jobs:
+  - template: 'Pipelines/Templates/build-web-app.yml@infrastructure'
+    parameters: 
+      projects: $(projects)
+      buildConfiguration: $(buildConfiguration)
+      testProjects: $(testProjects)
+      webProjName: $(webProjName)
+- stage: Deploy_Web_Api_Dev
+  variables:
+  - group: calculator-dev
+  - group: calculator-dev-keys
+  jobs:
+  - job: Deploy_Web_Api
+    pool:
+      vmImage: windows-latest
+    steps:
+    - template: 'Pipelines/Templates/deploy-web-app.yml@infrastructure'
+      parameters: 
+        azureSubscription: 'Visual Studio Professional'
+        appName: $(appName)
+        webProjName: $(webProjName)
+    condition: succeeded()
