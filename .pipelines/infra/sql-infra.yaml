@@ -1,18 +1,12 @@
 trigger:
   none
 
-resources:
-  repositories:
-  - repository: infrastructure
-    type: git
-    name: infrastructure
-
 stages:
 - stage: Validate_Publish_ARM_Template
   variables:
   - group: calculator-common
   jobs:
-  - template: Pipelines/Templates/validate-publish-ARM-template.yml@infrastructure
+  - template: templates/validate-publish-ARM-template.yml
     parameters: 
       azureSubscription: 'Visual Studio Professional'
       resourceGroup: $(resourceGroup)
@@ -23,7 +17,7 @@ stages:
   - group: calculator-dev
   - group: calculator-dev-keys
   jobs:
-  - template: 'Pipelines/Templates/deploy-sql-infra.yml@infrastructure'
+  - template: templates/deploy-sql-infra.yml
     parameters:
       azureSubscription: 'Visual Studio Professional'
       resourceGroup: $(resourceGroup)

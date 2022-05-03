@@ -1,18 +1,12 @@
 trigger:
   none
 
-resources:
-  repositories:
-  - repository: infrastructure
-    type: git
-    name: infrastructure
-
 stages:
 - stage: Validate_Publish_ARM_Template
   variables:
   - group: zipzapp-metadata
   jobs:
-  - template: Pipelines/Templates/validate-publish-ARM-template.yml@infrastructure
+  - template: templates/validate-publish-ARM-template.yml
     parameters: 
       azureSubscription: 'Visual Studio Professional'
       resourceGroup: $(resourceGroup)
@@ -22,7 +16,7 @@ stages:
   variables:
   - group: calculator-dev
   jobs:
-  - template: 'Pipelines/Templates/deploy-web-app-infra.yml@infrastructure'
+  - template: templates/deploy-web-app-infra.yml
     parameters:
       azureSubscription: 'Visual Studio Professional'
       resourceGroup: $(resourceGroup)

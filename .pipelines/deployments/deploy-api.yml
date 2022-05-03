@@ -1,11 +1,6 @@
 trigger:
   none
 
-resources:
-  repositories:
-  - repository: infrastructure
-    type: git
-    name: infrastructure
 variables:
   buildConfiguration: Release
   projects: '**/*.csproj'
@@ -16,7 +11,7 @@ stages:
   variables:
   - group: calculator-dev
   jobs:
-  - template: 'Pipelines/Templates/build-web-app.yml@infrastructure'
+  - template: templates/build-web-app.yml
     parameters: 
       projects: $(projects)
       buildConfiguration: $(buildConfiguration)
@@ -31,7 +26,7 @@ stages:
     pool:
       vmImage: windows-latest
     steps:
-    - template: 'Pipelines/Templates/deploy-web-app.yml@infrastructure'
+    - template: templates/deploy-web-app.yml
       parameters: 
         azureSubscription: 'Visual Studio Professional'
         appName: $(appName)
