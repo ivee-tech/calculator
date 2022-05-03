@@ -17,34 +17,31 @@ parameters:
 jobs:
 - job: Validate_Publish_ARM_Template_Job
   steps:
-  - template: clone-infra.yml
-  - script: |
-      dir
   - task: AzureResourceGroupDeployment@2
     displayName: 'Azure Deployment: Validate ARM Template'
     inputs:
       azureSubscription: '${{ parameters.azureSubscription }}'
       resourceGroupName: '${{ parameters.resourceGroup }}'
       location: '${{ parameters.location }}'
-      csmFile: infrastructure/Templates/ARM/${{ parameters.armTemplate }}/${{ parameters.armTemplateFileName }}
-      csmParametersFile: infrastructure/Templates/ARM/${{ parameters.armTemplate }}/${{ parameters.templateParametersFileName }}
+      csmFile: ../../${{ parameters.armTemplate }}/${{ parameters.armTemplateFileName }}
+      csmParametersFile: ../../${{ parameters.armTemplate }}/${{ parameters.templateParametersFileName }}
       deploymentMode: Validation
 
   - task: CopyFiles@2
     displayName: 'Copy ARM Templates'
     inputs:
-      SourceFolder: 'infrastructure/Templates/ARM/${{ parameters.armTemplate }}'
+      SourceFolder: '../../${{ parameters.armTemplate }}'
       Contents: |
         **/*.bicep
         **/*.json
         **/*.sh
         **/*.ps1
-      TargetFolder: '$(build.artifactstagingdirectory)/Templates/ARM/${{ parameters.armTemplate }}'
+      TargetFolder: '$(build.artifactstagingdirectory)/${{ parameters.armTemplate }}'
       OverWrite: true
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact'
     inputs:
-      PathtoPublish: '$(build.artifactstagingdirectory)/Templates/ARM/${{ parameters.armTemplate }}'
+      PathtoPublish: '$(build.artifactstagingdirectory)/${{ parameters.armTemplate }}'
       ArtifactName: '${{ parameters.armTemplate }}'
     condition: succeededOrFailed()
