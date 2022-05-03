@@ -15,7 +15,7 @@ stages:
 - stage: Deploy_Sql_Dev
   variables:
   - group: calculator-dev
-  - group: calculator-dev-keys
+  - group: calculator-dev-kv
   jobs:
   - template: templates/deploy-sql-infra.yml
     parameters:

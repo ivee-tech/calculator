@@ -20,7 +20,7 @@ stages:
 - stage: Deploy_Web_Api_Dev
   variables:
   - group: calculator-dev
-  - group: calculator-dev-keys
+  - group: calculator-dev-kv
   jobs:
   - job: Deploy_Web_Api
     pool:
