@@ -40,7 +40,7 @@ stages:
         azureConnectionType: 'ConnectedServiceNameARM'
         azureSubscription: 'VSP'
         authenticationType: 'server'
-        serverName: '$(dbServerName)'
+        serverName: '$(dbServerName).database.windows.net'
         databaseName: '$(dbName)'
         sqlUsername: '$(dbUser)'
         sqlPassword: '$(dbPassword)'
