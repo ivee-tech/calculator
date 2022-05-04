@@ -1,0 +1,40 @@
+trigger:
+  none
+
+variables:
+  buildConfiguration: Release
+
+pool:
+  vmImage: windows-latest
+
+stages:
+- stage: Build_Db
+  variables:
+  - group: calculator-common
+  jobs:
+  - job: Build_Db_Job
+    steps:
+    - task: MSBuild@1
+      inputs:
+        solution: '$(Pipeline.Workspace)/s/db/Calculator.sln' 
+        msbuildLocationMethod: 'version' # Optional. Options: version, location
+        msbuildVersion: 'latest' # Optional. Options: latest, 16.0, 15.0, 14.0, 12.0, 4.0
+        #msbuildArchitecture: 'x86' # Optional. Options: x86, x64
+        #msbuildLocation: # 
+        configuration: $(buildConfiguration)
+- stage: Deploy_Db
+  variables:
+  - group: calculator-dev
+  - group: calculator-dev-kv
+  jobs:
+  - job: Deploy_Db
+    steps:
+    - task: SqlAzureDacpacDeployment@1
+      inputs:
+        azureConnectionType: 'ConnectedServiceNameARM'
+        azureSubscription: 'VSP'
+        authenticationType: 'server'
+        serverName: '$(dbSvrName)'
+        databaseName: '$(dbName)'
+        sqlUsername: '$(dbUserName)'
+        sqlPassword: '$(dbPassword)'
