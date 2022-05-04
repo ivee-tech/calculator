@@ -1,0 +1,29 @@
+trigger:
+  none
+
+pool:
+  vmImage: ubuntu-latest
+  
+stages:
+- stage: Build_Web_App
+  variables:
+  - group: calculator-common
+  jobs:
+  - job: Build_Web_App_UI_Job
+    steps:
+    - template: '../templates/build-web-app-ui-only.yml'
+      parameters: 
+        webProjName: $(webAppProjName)
+- stage: Deploy_Web_App_Dev
+  variables:
+  - group: calculator-dev
+  jobs:
+  - job: Deploy_Web_App
+    pool:
+      vmImage: windows-latest
+    steps:
+    - template: '../templates/tokenize-deploy-web-app-ui.yml'
+      parameters: 
+        azureSubscription: 'VSP'
+        appName: $(appName)
+        webProjName: $(webProjName)
