@@ -9,7 +9,7 @@ variables:
 stages:
 - stage: Build_Web_Api
   variables:
-  - group: calculator-dev
+  - group: calculator-common
   jobs:
   - template: ../templates/build-web-app.yml
     parameters: 

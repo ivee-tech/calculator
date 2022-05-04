@@ -13,7 +13,7 @@ stages:
     steps:
     - template: '../templates/build-web-app-ui-only.yml'
       parameters: 
-        webProjName: $(webAppProjName)
+        webProjName: $(webAppProjNameUI)
 - stage: Deploy_Web_App_Dev
   variables:
   - group: calculator-dev
@@ -25,5 +25,5 @@ stages:
     - template: '../templates/tokenize-deploy-web-app-ui.yml'
       parameters: 
         azureSubscription: 'VSP'
-        appName: $(appName)
-        webProjName: $(webProjName)
+        appName: $(appNameUI)
+        webProjName: $(webProjNameUI)

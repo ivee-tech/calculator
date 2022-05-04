@@ -103,7 +103,7 @@ namespace Calculator.Web.Api.Controllers
             if(_env.IsProduction())
             {
                 var cred = new DefaultAzureCredential();
-                var kvUrl = $"https://{_configuration["Settings:KeyVaultName"]}.azure.keyvault.net";
+                var kvUrl = $"https://{_configuration["Settings:KeyVaultName"]}.vault.azure.net";
                 var kvUri = new Uri(kvUrl);
                 var client = new SecretClient(kvUri, cred);
                 var connectionString = client.GetSecret("ConnectionStrings--Default").Value.Value;
