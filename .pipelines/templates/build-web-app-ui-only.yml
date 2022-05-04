@@ -24,13 +24,13 @@ steps:
     TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.webProjName }}'
     CleanTargetFolder: true
     OverWrite: true
-# - task: CopyFiles@2
-#   displayName: 'Copy web.config'
-#   inputs:
-#     SourceFolder: '${{ parameters.webProjName }}'
-#     TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.webProjName }}'
-#     Contents: web.config
-#     OverWrite: true
+- task: CopyFiles@2
+  displayName: 'Copy web.config'
+  inputs:
+    SourceFolder: '${{ parameters.webProjName }}'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.webProjName }}'
+    Contents: web.config
+    OverWrite: true
 - publish: '$(Build.ArtifactStagingDirectory)/${{ parameters.webProjName }}'
   displayName: 'Publish Artifact'
   artifact: '${{ parameters.webProjName }}'
