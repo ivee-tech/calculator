@@ -2,8 +2,8 @@ parameters:
 - name: projects
   type: string
   default: '**/*.csproj'
-- name: feed
-  type: string
+# - name: feed
+#   type: string
 - name: buildConfiguration
   type: string
 - name: testProjects
@@ -27,7 +27,7 @@ jobs:
     inputs:
       command: restore
       projects: ${{ parameters.projects }}
-      vstsFeed: '${{ parameters.feed }}'
+      # vstsFeed: '${{ parameters.feed }}'
   - task: DotNetCoreCLI@2
     displayName: Build
     inputs:
