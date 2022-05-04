@@ -14,7 +14,7 @@ steps:
     npm install
   displayName: 'npm install'
   workingDirectory: '${{ parameters.webProjName }}'
-- script: 'npm run predeploy:prod' # task: Npm@1
+- script: 'npm run build'
   displayName: 'npm build'
   workingDirectory: '${{ parameters.webProjName }}'
 - task: CopyFiles@2
