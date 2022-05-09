@@ -60,14 +60,15 @@ namespace Calculator.Web.Api.UnitTests
             Assert.AreEqual(expected, actual);
         }
 
-        //[TestMethod]
-        //public void TestExpr5()
-        //{
-        //    var opSvc = new OperationService(false, _config);
-        //    var expr = " 1 - (3 + 4";
-        //    Assert.ThrowsException<CompilationErrorException>(async () => {
-        //        var expected = await opSvc.Execute(expr);
-        //    });
-        //}
+        [TestMethod]
+        public void TestExpr5()
+        {
+            var opSvc = new OperationService(false, _config);
+            var expr = " 1 - (3 + 4";
+            Assert.ThrowsExceptionAsync<CompilationErrorException>(async () =>
+            {
+                var expected = await opSvc.Execute(expr);
+            });
+        }
     }
 }
