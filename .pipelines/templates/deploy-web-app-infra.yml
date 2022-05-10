@@ -15,6 +15,9 @@ parameters:
   type: string
 - name: skuCapacity
   type: string
+- name: dependsOn
+  type: string
+  default: ''
 
 jobs:
 - job: Deploy_Web_App_Job
@@ -32,3 +35,5 @@ jobs:
       csmFile: '$(Pipeline.Workspace)/${{ parameters.webAppArmTemplate }}/azuredeploy.json'
       overrideParameters: '-planName ${{ parameters.planName }} -appName ${{ parameters.appName }} -skuName ${{ parameters.skuName }} -skuCapacity ${{ parameters.skuCapacity }}'
       deploymentName: 'webapp-deployment'
+  ${{ if not(eq(parameters['dependsOn'], '')) }}:
+  dependsOn: ${{ parameters.dependsOn }}
