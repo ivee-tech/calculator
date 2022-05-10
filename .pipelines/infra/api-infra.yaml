@@ -26,3 +26,20 @@ stages:
       appName: $(appName)
       skuName: $(skuName)
       skuCapacity: $(skuCapacity)
+- stage: Deploy_Web_App_Test
+  variables:
+  - group: calculator-test
+  jobs:
+  - deployment: deploy_test
+    environment: calculator-test
+  - template: ../templates/deploy-web-app-infra.yml
+    parameters:
+      azureSubscription: 'VSP'
+      resourceGroup: $(resourceGroup)
+      location: $(location)
+      webAppArmTemplate: $(webAppArmTemplate)
+      planName: $(planName)
+      appName: $(appName)
+      skuName: $(skuName)
+      skuCapacity: $(skuCapacity)
+    dependsOn: deploy_test
