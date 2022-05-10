@@ -36,4 +36,4 @@ jobs:
       overrideParameters: '-planName ${{ parameters.planName }} -appName ${{ parameters.appName }} -skuName ${{ parameters.skuName }} -skuCapacity ${{ parameters.skuCapacity }}'
       deploymentName: 'webapp-deployment'
   ${{ if not(eq(parameters['dependsOn'], '')) }}:
-  dependsOn: ${{ parameters.dependsOn }}
+    dependsOn: ${{ parameters.dependsOn }}
