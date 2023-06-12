@@ -1,0 +1,21 @@
+repo: daradu
+namespace: calculator
+db:
+  password: '***' # set at runtime, min 8 chars
+  tag: 2017-latest # 2022-latest
+  serviceType: NodePort
+  servicePort: 1435
+  nodePort: 30333
+api:
+  tag: 0.0.1-localk8s
+  serviceType: NodePort
+  servicePort: 9090
+  nodePort: 30334
+  connectionString: '***' # set at runtime 
+ui:
+  tag: 0.0.1-localk8s
+  serviceType: NodePort
+  servicePort: 9091
+  nodePort: 30335
+
+  

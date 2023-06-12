@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  calc-api:
+    image: ${DOCKER_REGISTRY-}calculator-api:0.0.1-local
+    container_name: calc-api
+    #build:
+    #  context: .
+    #  dockerfile: Calculator.Web.Api/Dockerfile
+    ports:
+    - "8080:80"
+    environment:
+    - CALC_DB_CONNECTIONSTRING=Data source=172.26.0.2;Initial Catalog=CalculatorDB;User ID=sa;Password=P@ssword123!@#
+    networks:
+    - calc-net
+  calc-ui:
+    image: ${DOCKER_REGISTRY-}calculator-ui:0.0.1-local
+    container_name: calc-ui
+    #build:
+    #  context: .
+    #  dockerfile: ../ui/Dockerfile
+    ports:
+    - "8081:80"
+    networks:
+    - calc-net
+
+networks:
+  calc-net:
+    driver: bridge
+    name: calc-net

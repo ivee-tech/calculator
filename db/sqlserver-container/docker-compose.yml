@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  calc-db:
+    image: ${DOCKER_REGISTRY-}calc-sqlserver:2022-latest
+    container_name: calc-db
+    #build:
+    #  context: .
+    #  dockerfile: ../db/sqlserver-container/Dockerfile
+    ports:
+    - "1434:1433"
+    environment:
+    - ACCEPT_EULA=Y
+    - MSSQL_SA_PASSWORD=P@ssword123!@#
+    networks:
+    - calc-net
+
+networks:
+  calc-net:
+    driver: bridge
+    name: calc-net

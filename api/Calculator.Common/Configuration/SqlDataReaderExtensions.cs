@@ -1,4 +1,4 @@
-﻿namespace Calculator.Web.Api.Configuration
+﻿namespace Calculator.Common.Configuration
 {
     using System;
     using System.Collections.Generic;

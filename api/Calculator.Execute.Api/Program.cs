@@ -1,7 +1,7 @@
-using Calculator.Web.Api.Controllers;
 using Calculator.Common.Interfaces;
-using Calculator.Common.Models;
-using Calculator.Common.Services;
+using Microsoft.AspNetCore.Builder;
+using Calculator.Log.Services;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,22 +11,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddCors();
-CallType callType = CallType.Direct;
-Enum.TryParse<CallType>(builder.Configuration["Settings:CallType"], out callType);
-switch(callType)
-{
-    case CallType.CallApi:
-        builder.Services.AddHttpClient();
-        builder.Services.AddSingleton<ApiClient>();
-        builder.Services.AddScoped<IOperationService, CallApiOperationService>();
-        break;
-    case CallType.Direct:
-    default:
-        builder.Services.AddScoped<IOperationService, DirectOperationService>();
-        break;
-}
+builder.Services.AddHttpClient();
+
+builder.Services.AddSingleton<IExecuteService, ExecuteService>();
 
 var app = builder.Build();
 

@@ -1,4 +1,6 @@
-﻿namespace Calculator.Web.Api.Models
+﻿using System;
+
+namespace Calculator.Common.Models
 {
     public class OperationLog
     {

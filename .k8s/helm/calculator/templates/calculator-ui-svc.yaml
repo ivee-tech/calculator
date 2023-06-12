@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: calculator-ui-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: calculator
+spec:
+  selector:
+    tier: calculator-ui
+  ports:
+    - protocol: TCP
+{{- if eq .Values.ui.serviceType "NodePort" }}
+      nodePort: {{ .Values.ui.nodePort }}
+      port: 80
+{{ end }}
+{{- if eq .Values.ui.serviceType "LoadBalancer" }}
+      port: {{ .Values.ui.servicePort }}
+{{ end }}
+      targetPort: 80
+      name: http
+  type: {{ .Values.ui.serviceType }}

@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-api-dep
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: calculator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: calculator-api
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/calculator-cm.yaml") . | sha256sum }}    
+      labels:
+        tier: calculator-api
+    spec:
+      containers:
+      - name: calculator-api
+        image: {{ .Values.repo }}/calculator-api:{{ .Values.api.tag }}
+        ports:
+        - containerPort: 80
+        env:
+        - name: CALC_DB_CONNECTIONSTRING
+          valueFrom:
+            secretKeyRef:
+              name: calculator-secret
+              key: CALC_DB_CONNECTIONSTRING
+        imagePullPolicy: Always
+

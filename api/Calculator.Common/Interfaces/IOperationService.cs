@@ -1,6 +1,9 @@
-﻿using Calculator.Web.Api.Models;
+﻿using Calculator.Common.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace Calculator.Web.Api.Services
+namespace Calculator.Common.Interfaces
 {
     public interface IOperationService
     {

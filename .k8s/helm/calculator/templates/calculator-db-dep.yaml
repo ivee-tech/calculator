@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-db-dep
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: calculator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: calculator-db
+  template:
+    metadata:
+      labels:
+        tier: calculator-db
+    spec:
+      # terminationGracePeriodSeconds: 10
+      # securityContext:
+      #   fsGroup: 1000
+      containers:
+      - name: mssql
+        image: {{ .Values.repo }}/calculator-sqlserver:{{ .Values.db.tag }}
+        # image: mcr.microsoft.com/mssql/server:{{ .Values.db.tag }}
+        ports:
+        - containerPort: 1433
+        env:
+        # - name: MSSQL_PID
+        #   value: "Developer"
+        - name: ACCEPT_EULA
+          value: "Y"
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: calculator-secret
+              key: MSSQL_SA_PASSWORD 
+        imagePullPolicy: Always

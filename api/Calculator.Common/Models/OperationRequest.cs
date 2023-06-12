@@ -1,4 +1,4 @@
-﻿namespace Calculator.Web.Api.Models
+﻿namespace Calculator.Common.Models
 {
     public class OperationRequest
     {
