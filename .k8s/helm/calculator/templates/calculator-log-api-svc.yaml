@@ -1,0 +1,18 @@
+{{ if .Values.api.log }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: calculator-log-api-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: calculator
+spec:
+  selector:
+    tier: calculator-log-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
+  type: ClusterIP
+{{ end }}

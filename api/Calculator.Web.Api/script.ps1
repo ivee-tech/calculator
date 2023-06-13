@@ -12,8 +12,11 @@ $result
 
 # container
 # from api sol folder
-$tag='0.0.1-localk8s' # '0.0.1-local' # '0.0.1-localk8s'
-docker build -t calculator-api:$($tag) -f .\Calculator.Web.Api\Dockerfile .
+$tag='0.0.1-localk8s-direct' # '0.0.1-local' # '0.0.1-localk8s'
+docker build -t calculator-api:$($tag) --build-arg USE_ENV_VAR=true --build-arg CALL_TYPE=Direct -f .\Calculator.Web.Api\Dockerfile .
+$tag='0.0.1-localk8s-callapi' # '0.0.1-local' # '0.0.1-localk8s'
+docker build -t calculator-api:$($tag) --build-arg USE_ENV_VAR=true --build-arg CALL_TYPE=CallApi -f .\Calculator.Web.Api\Dockerfile .
+
 docker run --name calc-api -p 8080:80 -d -e "CALC_DB_CONNECTIONSTRING=$($env:CALC_DB_CONNECTIONSTRING)" calculator-api:$($tag)
 docker logs calc-api -f
 docker rm calculator-api -f
@@ -29,7 +32,7 @@ $env:CALC_DB_CONNECTIONSTRING = $connectionString
 
 
 # push to docker hub
-$tag='0.0.1-localk8s' # '0.0.1-local' # '0.0.1-localk8s'
+$tag='0.0.1-localk8s-callapi' # '0.0.1-local' # '0.0.1-localk8s-direct' # '0.0.1-localk8s-callapi'
 $image='calculator-api'
 $registry='docker.io'
 $img="${image}:${tag}"

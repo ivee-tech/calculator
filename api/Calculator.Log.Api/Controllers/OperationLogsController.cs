@@ -43,7 +43,7 @@ namespace Calculator.Log.Controllers
             catch (LoggingException ex)
             {
                 Console.WriteLine(ex.ToString());
-                return Ok(ex.ToString());
+                return Problem(ex.ToString());
             }
             catch (Exception ex)
             {

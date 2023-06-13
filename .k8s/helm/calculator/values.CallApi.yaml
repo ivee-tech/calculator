@@ -1,0 +1,33 @@
+repo: daradu
+namespace: calculator
+db:
+  password: '***' # set at runtime, min 8 chars
+  tag: 2022-latest # 2017-latest # 2022-latest
+  serviceType: NodePort
+  servicePort: 1435
+  nodePort: 30333
+api:
+  tag: 0.0.1-localk8s-callapi
+  serviceType: NodePort
+  servicePort: 9090
+  nodePort: 30334
+  connectionString: '***' # set at runtime 
+  execute:
+    tag: 0.0.1
+    apiBaseUrl: 'http://calculator-execute-api-svc/api'
+  log:
+    tag: 0.0.1-localk8s
+    apiBaseUrl: 'http://calculator-log-api-svc/api'
+redis:
+  host: 'redis-master.redis.svc.cluster.local:6379'
+  password: '***' # get the password for redis and set it at runtime
+dapr:
+  useDaprState: true
+  stateStoreUrl: 'http://localhost:3500/v1.0/state/statestore'
+ui:
+  tag: 0.0.1-localk8s
+  serviceType: NodePort
+  servicePort: 9091
+  nodePort: 30335
+
+  

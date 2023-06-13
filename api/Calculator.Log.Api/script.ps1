@@ -1,11 +1,11 @@
 ﻿# container
 # from api sol folder
-$tag='0.0.1-local' # '0.0.1-local' # '0.0.1-localk8s'
-docker build -t calculator-log-api:$($tag) -f .\Calculator.Log.Api\Dockerfile .
+$tag='0.0.1-localk8s' # '0.0.1-local' # '0.0.1-localk8s'
+docker build -t calculator-log-api:$($tag) --build-arg USE_ENV_VAR=true -f .\Calculator.Log.Api\Dockerfile .
 
 
 # push to docker hub
-$tag='0.0.1-local' # '0.0.1-local' # '0.0.1-localk8s'
+$tag='0.0.1-localk8s' # '0.0.1-local' # '0.0.1-localk8s'
 $image='calculator-log-api'
 $registry='docker.io'
 $img="${image}:${tag}"

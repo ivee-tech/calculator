@@ -8,7 +8,7 @@ kubectl get pods -n dapr-system
 # create namespace redis, if required
 # kubectl create ns redis
 
-$ns = 'calculator' # 'redis'
+$ns = 'redis' # 'calculator' # 'redis'
 
 # create Redis store
 helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -27,7 +27,7 @@ helm uninstall redis -n $ns
 # bash
 export REDIS_PASSWORD=$(kubectl get secret --namespace $ns redis -o jsonpath="{.data.redis-password}" | base64 -d)
 # PS
-. ..\..\.scripts\base64.ps1
+. ..\.scripts\base64.ps1
 $REDIS_PASSWORD=$(kubectl get secret --namespace $ns redis -o jsonpath="{.data.redis-password}" | base64 -d)
 
 # connect to Redis
@@ -77,4 +77,4 @@ helm repo add dapr https://dapr.github.io/helm-charts/
 helm repo update
 helm install dapr-dashboard dapr/dapr-dashboard
 # run dashboard
-dapr dahsboard -k -p 9999
+dapr dashboard -k -p 9999

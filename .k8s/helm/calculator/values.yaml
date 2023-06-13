@@ -7,7 +7,7 @@ db:
   servicePort: 1435
   nodePort: 30333
 api:
-  tag: 0.0.1-localk8s
+  tag: 0.0.1-localk8s-direct
   serviceType: NodePort
   servicePort: 9090
   nodePort: 30334

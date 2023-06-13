@@ -1,0 +1,27 @@
+{{ if .Values.api.execute }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-execute-api-dep
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: calculator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: calculator-execute-api
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/calculator-cm.yaml") . | sha256sum }}    
+      labels:
+        tier: calculator-execute-api
+    spec:
+      containers:
+      - name: calculator-execute-api
+        image: {{ .Values.repo }}/calculator-execute-api:{{ .Values.api.execute.tag }}
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+{{ end }}

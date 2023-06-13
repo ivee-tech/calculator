@@ -1,0 +1,18 @@
+{{ if .Values.api.execute }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: calculator-execute-api-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: calculator
+spec:
+  selector:
+    tier: calculator-execute-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
+  type: ClusterIP
+{{ end }}

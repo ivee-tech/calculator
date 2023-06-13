@@ -14,6 +14,7 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Calculator.Common.Models;
 using static Calculator.Common.Configuration.SqlDataReaderExtensions;
+using static Calculator.Common.Configuration.ConfigurationExtensions;
 
 namespace Calculator.Log.Services
 {
@@ -101,15 +102,16 @@ namespace Calculator.Log.Services
             var useEnvVar = _configuration.GetValue<bool>("Settings:UseEnvVar");
             if (useEnvVar)
             {
-                // Windows
-                connectionString = Environment.GetEnvironmentVariable("CALC_DB_CONNECTIONSTRING", EnvironmentVariableTarget.User);
-                // Linux
-                if (string.IsNullOrEmpty(connectionString))
-                {
-                    connectionString = Environment.GetEnvironmentVariable("CALC_DB_CONNECTIONSTRING");
-                }
-                Console.WriteLine($"CALC_DB_CONNECTIONSTRING: {connectionString}");
-                return connectionString;
+                //// Windows
+                //connectionString = Environment.GetEnvironmentVariable("CALC_DB_CONNECTIONSTRING", EnvironmentVariableTarget.User);
+                //// Linux
+                //if (string.IsNullOrEmpty(connectionString))
+                //{
+                //    connectionString = Environment.GetEnvironmentVariable("CALC_DB_CONNECTIONSTRING");
+                //}
+                //Console.WriteLine($"CALC_DB_CONNECTIONSTRING: {connectionString}");
+                //return connectionString;
+                return _configuration.GetValue("ConnectionStrings:Default", "CALC_DB_CONNECTIONSTRING");
             }
             else
             {

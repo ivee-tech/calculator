@@ -4,4 +4,4 @@ metadata:
   name: calculator-config
   namespace: {{ .Values.namespace }}
 data:
-  FAILURE_RATE: "6"
+  failure-rate: "6"

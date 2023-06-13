@@ -10,8 +10,7 @@ using Calculator.Common.Interfaces;
 using Calculator.Common.Exceptions;
 using Calculator.Common.Services;
 using Calculator.Web.Api.Configuration;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using static Calculator.Common.Configuration.ConfigurationExtensions;
 
 namespace Calculator.Web.Api.Controllers
 {
@@ -34,7 +33,8 @@ namespace Calculator.Web.Api.Controllers
 
         public async Task<List<OperationLog>> Get(DateTime sd, DateTime ed)
         {
-            var url = $"{_configuration["Settings:LogApiBaseUrl"]}/operationlogs?sd={sd.ToString("s")}&ed={ed.ToString("s")}";
+            var logApiBaseUrl = _configuration.GetValue("Settings:LogApiBaseUrl", "CALC_LOGAPI_BASEURL");
+            var url = $"{logApiBaseUrl}/operationlogs?sd={sd.ToString("s")}&ed={ed.ToString("s")}";
             var list = await _apiClient.GetAsync<List<OperationLog>>(url, Constants.Log);
             return list;
         }
@@ -49,16 +49,31 @@ namespace Calculator.Web.Api.Controllers
                 throw new Exception(error);
             }
             request.Expression = Uri.UnescapeDataString(request?.Expression);
-            var logUrl = $"{_configuration["Settings:LogApiBaseUrl"]}/operationlogs";
+            var executeApiBaseUrl = _configuration.GetValue("Settings:ExecuteApiBaseUrl", "CALC_EXECUTEAPI_BASEURL");
+            var useDaprState = false;
+            var sUseDaprState = _configuration.GetValue("Settings:UseDaprState", "USE_DAPR_STATE");
+            bool.TryParse(sUseDaprState, out useDaprState);
+            var logApiBaseUrl = _configuration.GetValue("Settings:LogApiBaseUrl", "CALC_LOGAPI_BASEURL");
+            var daprStateStoreUrl = _configuration.GetValue("Settings:DaprStateStoreUrl", "DAPR_STATESTORE_URL");
+            var logUrl = useDaprState ? $"{daprStateStoreUrl}" : $"{logApiBaseUrl}/operationlogs";
             double result = 0;
             var logRequest = new OperationLogRequest { Expression = request.Expression, Result = result, Error = "" };
             try
             {
-                var execUrl = $"{_configuration["Settings:ExecuteApiBaseUrl"]}/execute";
+                var execUrl = $"{executeApiBaseUrl}/execute";
                 var response = await _apiClient.PostAsync<OperationResponse>(execUrl, request, Constants.Execute);
                 result = response.Result;
                 logRequest.Result = result;
-                await _apiClient.PostAsync<OperationLogRequest>(logUrl, logRequest, Constants.Log);
+                if(useDaprState)
+                {
+                    var id = KeyGenerator.GetKey(6);
+                    var daprState = new[] { new { key = $"operationlogs-{id}", value = logRequest } };
+                    await _apiClient.PostAsync<IEnumerable<object>>(logUrl, daprState, Constants.Log);
+                }
+                else
+                {
+                    await _apiClient.PostAsync<OperationLogRequest>(logUrl, logRequest, Constants.Log);
+                }
                 return response;
             }
             catch (ApiException ex)
@@ -69,7 +84,16 @@ namespace Calculator.Web.Api.Controllers
                 {
                     case Constants.Execute:
                         logRequest.Error = error;
-                        await _apiClient.PostAsync<OperationLogRequest>(logUrl, logRequest, Constants.Log);
+                        if (useDaprState)
+                        {
+                            var id = KeyGenerator.GetKey(6);
+                            var daprState = new[] { new { key = $"operationlogs-{id}", value = logRequest } };
+                            await _apiClient.PostAsync<IEnumerable<object>>(logUrl, daprState, Constants.Log);
+                        }
+                        else
+                        {
+                            await _apiClient.PostAsync<OperationLogRequest>(logUrl, logRequest, Constants.Log);
+                        }
                         break;
                     case Constants.Log:
                         var response = new OperationResponse { Expression = request.Expression, Result = result, Message = $"WARNING: Failed logging. Logging Error: {error}" };
