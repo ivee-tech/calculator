@@ -1,7 +1,7 @@
 # create helm chart
 helm create calculator
 
-$password = '***' # 'P@ssword123!@#'
+$password = 'AAAbbb12345!@#$%' # 'P@ssword123!@#'
 $connectionString = "Data source=calculator-db-cip;Initial Catalog=CalculatorDB;User ID=sa;Password=$($password)"
 
 $passwordB64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($password))
@@ -27,6 +27,9 @@ kubectl config current-context
 helm install calculator .\calculator --set db.password=$passwordB64 --set api.connectionString=$connectionStringB64
 # CallApi
 helm upgrade --install calculator -f .\calculator\values.CallApi.yaml .\calculator `
+    --set db.password=$passwordB64 --set api.connectionString=$connectionStringB64 --set redis.password=$redisPasswordB64
+# PubSub
+helm upgrade --install calculator -f .\calculator\values.PubSub.yaml .\calculator `
     --set db.password=$passwordB64 --set api.connectionString=$connectionStringB64 --set redis.password=$redisPasswordB64
 
 # uninstall

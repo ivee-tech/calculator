@@ -10,6 +10,7 @@ using Calculator.Log.Services;
 using Calculator.Common.Interfaces;
 using Azure;
 using Calculator.Common.Exceptions;
+using Dapr;
 
 namespace Calculator.Log.Controllers
 {
@@ -18,11 +19,13 @@ namespace Calculator.Log.Controllers
     public class OperationLogsController : ControllerBase
     {
         private readonly ILogService _logSvc;
+        private readonly ILogger<OperationLogsController> _logger;
 
-        public OperationLogsController(ILogService logSvc)
+        public OperationLogsController(ILogService logSvc, ILogger<OperationLogsController> logger)
         {
             _logSvc = logSvc;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            _logger = logger;
         }
 
         [HttpGet("")]
@@ -33,21 +36,24 @@ namespace Calculator.Log.Controllers
         }
 
         [HttpPost("")]
+        [Topic("pubsub", "calc-operation-logs")]
         public async Task<IActionResult> Post(OperationLogRequest request)
         {
             try
             {
+                _logger.LogInformation($"Logging operation {request.Expression}...");
                 await _logSvc.LogOperation(request.Expression, request.Result, request.Error);
+                _logger.LogInformation($"Operation {request.Expression} logged successfully.");
                 return Ok();
             }
             catch (LoggingException ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogError(ex.ToString());
                 return Problem(ex.ToString());
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogError(ex.ToString());
                 throw;
             }
         }

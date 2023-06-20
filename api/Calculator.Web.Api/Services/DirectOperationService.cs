@@ -20,12 +20,14 @@ namespace Calculator.Web.Api.Controllers
 
         private readonly IWebHostEnvironment _environment;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<DirectOperationService> _logger;
 
-        public DirectOperationService(IWebHostEnvironment environment, IConfiguration configuration)
+        public DirectOperationService(IWebHostEnvironment environment, IConfiguration configuration, ILogger<DirectOperationService> logger)
         {
             _environment = environment;
             _configuration = configuration;
             _isProduction = _environment.IsProduction();
+            _logger = logger;
         }
 
         public async Task<List<OperationLog>> Get(DateTime sd, DateTime ed)
@@ -73,7 +75,7 @@ namespace Calculator.Web.Api.Controllers
             if(string.IsNullOrEmpty(request?.Expression))
             {
                 var error = "Expression cannot be empty.";
-                Console.WriteLine(error);
+                _logger.LogError(error);
                 throw new Exception(error);
             }
             var expression = Uri.UnescapeDataString(request?.Expression);
@@ -88,19 +90,19 @@ namespace Calculator.Web.Api.Controllers
             {
                 var error = ex.ToString();
                 await LogOperation(expression, result, error);
-                Console.WriteLine(error);
+                _logger.LogError(error);
                 throw new Exception(error);
             }
             catch (LoggingException ex)
             {
                 var error = ex.ToString();
-                Console.WriteLine(error);
+                _logger.LogError(error);
                 return new OperationResponse { Expression = expression, Result = result, Message = $"WARNING: Failed logging. Logging Error: {error}" };
             }
             catch (Exception ex)
             {
                 var error = ex.ToString();
-                Console.WriteLine(error);
+                _logger.LogError(error);
                 throw new Exception(error);
             }
         }
@@ -118,7 +120,6 @@ namespace Calculator.Web.Api.Controllers
                 {
                     connectionString = Environment.GetEnvironmentVariable("CALC_DB_CONNECTIONSTRING");
                 }
-                Console.WriteLine($"CALC_DB_CONNECTIONSTRING: {connectionString}");
                 return connectionString;
             }
             else
@@ -133,12 +134,10 @@ namespace Calculator.Web.Api.Controllers
                         var kvUri = new Uri(kvUrl);
                         var client = new SecretClient(kvUri, cred);
                         connectionString = client.GetSecret("ConnectionStrings--Default").Value.Value;
-                        Console.WriteLine($"ConnectionStrings--Default: {connectionString}");
                         return connectionString;
                     }
                 }
             }
-            Console.WriteLine($"ConnectionStrings:Default: {connectionString}");
             return connectionString;
         }
 

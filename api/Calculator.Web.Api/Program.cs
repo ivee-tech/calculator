@@ -7,6 +7,8 @@ using Polly;
 using Calculator.Common.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // Add services to the container.
 
@@ -27,6 +29,11 @@ switch(callType)
             ;
         builder.Services.AddSingleton<ApiClient>();
         builder.Services.AddScoped<IOperationService, CallApiOperationService>();
+        break;
+    case CallType.PubSub:
+        builder.Services.AddHttpClient();
+        builder.Services.AddSingleton<ApiClient>();
+        builder.Services.AddScoped<IOperationService, PubSubOperationService>();
         break;
     case CallType.Direct:
     default:

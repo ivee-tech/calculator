@@ -16,3 +16,5 @@ spec:
  # uncomment below for connecting to redis cache instances over TLS (ex - Azure Redis Cache)
   # - name: enableTLS
   #   value: true 
+auth:
+  secretStore: kubernetes

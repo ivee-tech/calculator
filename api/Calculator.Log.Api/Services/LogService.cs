@@ -130,7 +130,6 @@ namespace Calculator.Log.Services
                     }
                 }
             }
-            Console.WriteLine($"ConnectionStrings:Default: {connectionString}");
             return connectionString;
         }
     }

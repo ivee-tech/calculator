@@ -1,5 +1,5 @@
 {
-    "apiBaseUrl": "http://calc-api:80/api",
+    "apiBaseUrl": "https://localhost:7057/api",
     "apiBaseUrl_docker": "http://calc-api:80/api",
     "apiBaseUrl_local": "https://localhost:7057/api"
 }

@@ -9,6 +9,7 @@ namespace Calculator.Common.Models
     public enum CallType
     {
         Direct = 0,
-        CallApi = 1
+        CallApi = 1,
+        PubSub = 2
     }
 }

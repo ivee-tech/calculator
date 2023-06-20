@@ -27,7 +27,7 @@ helm uninstall redis -n $ns
 # bash
 export REDIS_PASSWORD=$(kubectl get secret --namespace $ns redis -o jsonpath="{.data.redis-password}" | base64 -d)
 # PS
-. ..\.scripts\base64.ps1
+. ..\..\.scripts\base64.ps1
 $REDIS_PASSWORD=$(kubectl get secret --namespace $ns redis -o jsonpath="{.data.redis-password}" | base64 -d)
 
 # connect to Redis

@@ -16,11 +16,13 @@ namespace Calculator.Execute.Controllers
     public class ExecuteController : ControllerBase
     {
         private readonly IExecuteService _execSvc;
+        private readonly ILogger<ExecuteController> _logger;
 
-        public ExecuteController(IExecuteService execSvc)
+        public ExecuteController(IExecuteService execSvc, ILogger<ExecuteController> logger)
         {
             _execSvc = execSvc;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            _logger = logger;
         }
 
         [HttpPost("")]
@@ -40,7 +42,7 @@ namespace Calculator.Execute.Controllers
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex.ToString());
+                _logger.LogError(ex.ToString());
                 return Problem(ex.ToString());
             }
         }     

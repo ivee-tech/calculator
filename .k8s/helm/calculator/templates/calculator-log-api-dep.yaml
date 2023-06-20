@@ -14,7 +14,12 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: {{ include (print $.Template.BasePath "/calculator-cm.yaml") . | sha256sum }}    
+        checksum/config: {{ include (print $.Template.BasePath "/calculator-cm.yaml") . | sha256sum }}
+{{ if .Values.dapr.pubSubUrl }}
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "calculator-log-api"
+        dapr.io/app-port: "80"
+{{ end }}
       labels:
         tier: calculator-log-api
     spec:

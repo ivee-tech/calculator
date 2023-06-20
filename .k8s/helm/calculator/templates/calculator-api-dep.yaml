@@ -40,5 +40,9 @@ spec:
           value: {{ .Values.dapr.stateStoreUrl }}
         - name: USE_DAPR_STATE
           value: "{{ .Values.dapr.useDaprState }}"
+{{ if .Values.dapr.pubSubUrl }}
+        - name: DAPR_PUBSUB_URL
+          value: {{ .Values.dapr.pubSubUrl }}
+{{ end }}
         imagePullPolicy: Always
 
