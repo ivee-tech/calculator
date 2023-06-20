@@ -1,5 +1,5 @@
 
-$tag = '0.0.1-localk8s' # '0.0.1-local' # '0.0.1-localk8s'
+$tag = '0.0.1-local' # '0.0.1-local' # '0.0.1-localk8s'
 docker rm $(docker ps -aq) -f
 cat Dockerfile
 docker build -t calculator-ui:$($tag) .

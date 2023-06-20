@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   calc-db:
-    image: ${DOCKER_REGISTRY-}calc-sqlserver:2022-latest
+    image: ${DOCKER_REGISTRY-}calculator-sqlserver:2017-latest
     container_name: calc-db
     #build:
     #  context: .
@@ -11,7 +11,7 @@ services:
     - "1434:1433"
     environment:
     - ACCEPT_EULA=Y
-    - MSSQL_SA_PASSWORD=P@ssword123!@#
+    - MSSQL_SA_PASSWORD=AAAbbb12345!@#$%
     networks:
     - calc-net
 
