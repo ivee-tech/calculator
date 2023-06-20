@@ -545,6 +545,73 @@ Check services
 kubectl get svc -n calculator
 ```
 
+The output should look like below:
+
+``` PS
+NAME                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+calculator-api-svc   NodePort    10.103.164.0     <none>        80:30334/TCP     17s
+calculator-db-cip    ClusterIP   10.108.174.195   <none>        1433/TCP         17s
+calculator-db-svc    NodePort    10.102.128.20    <none>        1433:30333/TCP   17s
+calculator-ui-svc    NodePort    10.111.91.115    <none>        80:30335/TCP     17s
+```
+
+
+**Task - create the `OperationLogs` table**
+
+In the get services output, you should notice the NodePort service `calculator-db-svc` running on port 30333.
+
+Inside Sql Server Management Studio (SSMS), open a connection to the Sql container running in Kubernetes, using this server.
+
+Open the *db/sqlserver-container/setup.sql* and execute. The table `OperationLogs` should be available.
+
+![K8S local DB](./docs/images/06-k8s-db.png)
+
+
+**Task - test the application**
+
+To test the application, open a browser window and navigate to `http://localhost:30335`
+
+![K8S local Direct UI](./docs/images/05-k8s-ui.png)
+
+
+**Task - test resilience**
+
+Let's see how the application behaves when the DB is down.
+
+Get all deployments and check for the `calculator-db-dep` entry. 
+
+``` PS
+kubectl get deploy -n calculator
+```
+
+Delete DB deployment
+
+``` PS
+kubectl delete deploy calculator-db-dep -n calculator
+```
+
+Test the application again and you will find that every time there is a delay because the DB logging fails.
+
+Check the API logs to find the problem
+
+``` PS
+kubectl logs -l tier=calculator-api -n calculator
+kubectl logs <API pod name> -n calculator
+```
+
+Output is something like below:
+
+``` PS
+Calculator.Common.Exceptions.LoggingException: A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: TCP Provider, error: 40 - Could not open a connection to SQL Server)
+```
+
+Optionally, restore the release
+
+``` PS
+helm upgrade --install calculator .\calculator --set db.password=$passwordB64 --set api.connectionString=$connectionStringB64
+
+```
+
 ## Execute in K8S (local) - CallApi
 
 `CallApi` is a slightly improved version with work offloaded to dedicated services for execution and database logging. The main Web Api performs async calls to both services. If the DB log service is not available, the user experience is still not great.
