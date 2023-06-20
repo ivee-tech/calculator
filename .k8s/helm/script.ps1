@@ -1,19 +1,19 @@
 # create helm chart
 helm create calculator
 
-$password = 'AAAbbb12345!@#$%' # 'P@ssword123!@#'
-$connectionString = "Data source=calculator-db-cip;Initial Catalog=CalculatorDB;User ID=sa;Password=$($password)"
+$password = 'AAAbbb12345!@#$%'
+$connectionString = "Data Source=calculator-db-cip;Initial Catalog=CalculatorDB;User ID=sa;Password=$($password)"
 
-$passwordB64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($password))
+. ..\..\.scripts\base64.ps1
+$passwordB64 = base64 -data $password
 $passwordB64
 
-$connectionStringB64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($connectionString))
+$connectionStringB64 = base64 -data $connectionString
 $connectionStringB64
 
 $redisPasswordB64=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}")
 $redisPasswordB64
 
-. ..\..\.scripts\base64.ps1
 $secret = base64 -data $base64 -d
 $secret
 

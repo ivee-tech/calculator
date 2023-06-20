@@ -1,3 +1,4 @@
+{{ if .Values.dapr }}
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
@@ -18,3 +19,4 @@ spec:
   #   value: true 
 auth:
   secretStore: kubernetes
+{{ end }}

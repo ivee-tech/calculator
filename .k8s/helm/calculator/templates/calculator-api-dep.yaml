@@ -14,10 +14,12 @@ spec:
     metadata:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/calculator-cm.yaml") . | sha256sum }}    
+{{ if .Values.dapr }}
         dapr.io/enabled: "true"
         dapr.io/app-id: "calculator-api"
         dapr.io/app-port: "80"
         dapr.io/enable-api-logging: "true"
+{{ end }}
       labels:
         tier: calculator-api
     spec:
@@ -32,10 +34,15 @@ spec:
             secretKeyRef:
               name: calculator-secret
               key: CALC_DB_CONNECTIONSTRING
+{{ if .Values.api.execute }}
         - name: CALC_EXECUTEAPI_BASEURL
           value: {{ .Values.api.execute.apiBaseUrl }}
+{{ end }}
+{{ if .Values.api.log }}
         - name: CALC_LOGAPI_BASEURL
           value: {{ .Values.api.log.apiBaseUrl }}
+{{ end }}
+{{ if .Values.dapr }}
         - name: DAPR_STATESTORE_URL
           value: {{ .Values.dapr.stateStoreUrl }}
         - name: USE_DAPR_STATE
@@ -43,6 +50,7 @@ spec:
 {{ if .Values.dapr.pubSubUrl }}
         - name: DAPR_PUBSUB_URL
           value: {{ .Values.dapr.pubSubUrl }}
+{{ end }}
 {{ end }}
         imagePullPolicy: Always
 
