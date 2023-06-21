@@ -663,7 +663,6 @@ kubectl exec --tty -i redis-client --namespace $ns -- bash
 
 # 2. connect using Redis CLI:
 REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h redis-master
-REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h redis-replicas
 
 # connect to your database from outside the cluster:
 kubectl port-forward --namespace $ns svc/redis-master 6379:6379
@@ -675,6 +674,14 @@ kubectl port-forward --namespace $ns svc/redis-master 6379:6379
 
 Check the file *calculator/values.CallApi.yaml*.
 The sensitive parameters are not set and they need to be passed when installing the release.
+Notice the presence of `dapr` section:
+
+``` yaml
+dapr:
+  useDaprState: false
+  stateStoreUrl: 'http://localhost:3500/v1.0/state/statestore'
+  pubSubUrl: 'http://localhost:3500/v1.0/publish/pubsub/calc-operation-logs'
+```
 
 ``` yaml
 repo: daradu
@@ -733,7 +740,7 @@ helm upgrade --install calculator -f .\calculator\values.CallApi.yaml .\calculat
 
 Use the same tasks as in previous exercices, including DB deployment deletion.
 
-Wehn deleting the database deployment, you won't encounter any improvement over the `Direct` approach, as the Log Api will still attempt to connect to a non-existent database.
+When deleting the database deployment, you won't encounter any improvement over the `Direct` approach, as the Log Api will still attempt to connect to a non-existent database.
 
 **Task - Check resiliency with DAPR state store**
 
@@ -764,8 +771,6 @@ HGETALL <key>
 ```
 
 
-
-
 ## Execute in K8S (local) - PubSub
 
 `PubSub` is a solid approach where the communication between services is done via messages handled by a DAPR PubSub component.
@@ -775,6 +780,92 @@ The DB Log Api is registered as subscriber and consumes those messages, sending 
 
 Execution Api is still called asynchronously.
 
+**Task - inspect values**
+
+Check the file *calculator/values.PubSub.yaml*.
+The sensitive parameters are not set and they need to be passed when installing the release.
+Notice the `dapr` section contains the `pubSubUrl` property:
+
+``` yaml
+dapr:
+  useDaprState: false
+  stateStoreUrl: 'http://localhost:3500/v1.0/state/statestore'
+  pubSubUrl: 'http://localhost:3500/v1.0/publish/pubsub/calc-operation-logs'
+```
+
+``` yaml
+repo: daradu
+namespace: calculator
+db:
+  password: '***' # set at runtime, min 8 chars
+  tag: 2022-latest # 2017-latest # 2022-latest
+  serviceType: NodePort
+  servicePort: 1435
+  nodePort: 30333
+api:
+  tag: 0.0.1-localk8s-pubsub
+  serviceType: NodePort
+  servicePort: 9090
+  nodePort: 30334
+  connectionString: '***' # set at runtime 
+  execute:
+    tag: 0.0.1
+    apiBaseUrl: 'http://calculator-execute-api-svc/api'
+  log:
+    tag: 0.0.1-localk8s-pubsub
+    apiBaseUrl: 'http://calculator-log-api-svc/api'
+redis:
+  host: 'redis-master.redis.svc.cluster.local:6379'
+  password: '***' # get the password for redis and set it at runtime
+dapr:
+  useDaprState: false
+  stateStoreUrl: 'http://localhost:3500/v1.0/state/statestore'
+  pubSubUrl: 'http://localhost:3500/v1.0/publish/pubsub/calc-operation-logs'
+ui:
+  tag: 0.0.1-localk8s
+  serviceType: NodePort
+  servicePort: 9091
+  nodePort: 30335
+
+  ```
+
+**Task - install the calculator chart**
+
+> **_NOTE:__**: Use the same DB password, connection string, and Redis password (BASE64) generated previously.
+
+Install the chart
+
+``` PS
+helm upgrade --install calculator -f .\calculator\values.PubSub.yaml .\calculator `
+    --set db.password=$passwordB64 --set api.connectionString=$connectionStringB64 --set redis.password=$redisPasswordB64
+```
+
+**Task - verify deployments and test application**
+
+Use the same tasks as in previous exercices, including DB deployment deletion.
+
+To verify `PubSub` messages, use the `redis-client` container to connect to Redis.
+
+Use the following commands to see the messages:
+
+``` sh
+KEYS *
+XRANGE calc-operation-logs - +
+```
+
+When deleting the database deployment, the application no longer waits for the operation log to be processed, instead it returns the result immediately.
+A message is published to the Redis topic and the subscriber (Log Api will consume the message).
+
+Test the application with multiple operations, including some invalid operations.
 
 
+**Task - Check resiliency with DAPR state store**
 
+Upgrade the chart release
+
+``` PS
+helm upgrade --install calculator -f .\calculator\values.PubSub.yaml .\calculator `
+    --set db.password=$passwordB64 --set api.connectionString=$connectionStringB64 --set redis.password=$redisPasswordB64
+```
+
+Re-configure the DB and once the `OperationLogs` table is created, you'll find that it is immediately populated based on existing messages in the queue.
