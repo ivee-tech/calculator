@@ -720,9 +720,9 @@ ui:
 
 **Task - install the calculator chart**
 
-> **_NOTE:__**: Use the same password and connection string (BASE64) generated previously.
+> **_NOTE:_**: Use the same password and connection string (BASE64) generated previously.
 
-Additonally, this approach requires access to Redis
+Additionally, this approach requires access to Redis
 
 ``` PS
 $redisPasswordB64=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}")
@@ -738,7 +738,7 @@ helm upgrade --install calculator -f .\calculator\values.CallApi.yaml .\calculat
 
 **Task - verify deployments and test application**
 
-Use the same tasks as in previous exercices, including DB deployment deletion.
+Use the same tasks as in previous exercises, including DB deployment deletion.
 
 When deleting the database deployment, you won't encounter any improvement over the `Direct` approach, as the Log Api will still attempt to connect to a non-existent database.
 
@@ -761,7 +761,7 @@ helm upgrade --install calculator -f .\calculator\values.CallApi.yaml .\calculat
     --set db.password=$passwordB64 --set api.connectionString=$connectionStringB64 --set redis.password=$redisPasswordB64
 ```
 
-Check the REDIS client in K8S (see the **Connect to Redis** task).
+Check the Redis client in K8S (see the **Connect to Redis** task).
 
 Execute various commands to confirm the operation logs are stored in Redis now.
 
@@ -831,7 +831,7 @@ ui:
 
 **Task - install the calculator chart**
 
-> **_NOTE:__**: Use the same DB password, connection string, and Redis password (BASE64) generated previously.
+> **_NOTE:_**: Use the same DB password, connection string, and Redis password (BASE64) generated previously.
 
 Install the chart
 
@@ -842,7 +842,7 @@ helm upgrade --install calculator -f .\calculator\values.PubSub.yaml .\calculato
 
 **Task - verify deployments and test application**
 
-Use the same tasks as in previous exercices, including DB deployment deletion.
+Use the same tasks as in previous exercises, including DB deployment deletion.
 
 To verify `PubSub` messages, use the `redis-client` container to connect to Redis.
 
@@ -854,7 +854,7 @@ XRANGE calc-operation-logs - +
 ```
 
 When deleting the database deployment, the application no longer waits for the operation log to be processed, instead it returns the result immediately.
-A message is published to the Redis topic and the subscriber (Log Api will consume the message).
+A message is published to the Redis topic and the subscriber (Log Api) will consume it.
 
 Test the application with multiple operations, including some invalid operations.
 
