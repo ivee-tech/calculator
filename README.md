@@ -476,7 +476,7 @@ helm uninstall calculator
 
 Navigate to *.k8s/helm*
 
-**Task - inspect values.yaml**
+**Task - inspect values**
 
 Check the file *calculator/values.yaml*.
 The sensitive parameters are not set and they need to be passed when installing the release.
@@ -616,7 +616,155 @@ helm upgrade --install calculator .\calculator --set db.password=$passwordB64 --
 
 `CallApi` is a slightly improved version with work offloaded to dedicated services for execution and database logging. The main Web Api performs async calls to both services. If the DB log service is not available, the user experience is still not great.
 
-This approach also prvides an alternative to use DAPR state store to store the operation execution logs.
+This approach also provides an alternative to use DAPR state store to store the operation execution logs.
+
+**Task - Review Execute & Log Apis**
+
+The solution *Calculator.Web.Api.sln* contains two additional Apis:
+- `Calculator.Execute.Api` - executes the operation and returns the result
+- `Calculator.Log.Api` - saves the operation log to the SQL DB
+
+
+**Task - Initialize DAPR for Kubernetes**
+
+Initialize DAPR using `-k` argument and check status.
+
+``` PS
+# initialize dapr for K8S
+dapr init -k
+# check status 
+dapr status -k
+# OR
+kubectl get pods -n dapr-system
+```
+
+**Task - install Redis pre-requisites**
+
+Install Redis
+
+``` PS
+$ns = 'redis'
+helm repo update
+helm install redis bitnami/redis --set image.tag=6.2 -n $ns
+```
+
+**Task - Connect to Redis** 
+
+This will be useful to investigate the state store and pubsub messages for next exercise.
+
+``` PS
+# 1. Run a Redis pod that you can use as a client:
+$ns = 'redis'
+. ..\..\.scripts\base64.ps1
+$REDIS_PASSWORD=$(kubectl get secret --namespace $ns redis -o jsonpath="{.data.redis-password}" | base64 -d)
+
+kubectl run --namespace $ns redis-client --restart='Never'  --env REDIS_PASSWORD=$REDIS_PASSWORD  --image docker.io/bitnami/redis:6.2 --command -- sleep infinity
+kubectl exec --tty -i redis-client --namespace $ns -- bash
+
+# 2. connect using Redis CLI:
+REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h redis-master
+REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h redis-replicas
+
+# connect to your database from outside the cluster:
+kubectl port-forward --namespace $ns svc/redis-master 6379:6379
+    & REDISCLI_AUTH="$REDIS_PASSWORD" redis-cli -h 127.0.0.1 -p 6379
+
+```
+
+**Task - inspect values**
+
+Check the file *calculator/values.CallApi.yaml*.
+The sensitive parameters are not set and they need to be passed when installing the release.
+
+``` yaml
+repo: daradu
+namespace: calculator
+db:
+  password: '***' # set at runtime, min 8 chars
+  tag: 2022-latest # 2017-latest # 2022-latest
+  serviceType: NodePort
+  servicePort: 1435
+  nodePort: 30333
+api:
+  tag: 0.0.1-localk8s-callapi
+  serviceType: NodePort
+  servicePort: 9090
+  nodePort: 30334
+  connectionString: '***' # set at runtime 
+  execute:
+    tag: 0.0.1
+    apiBaseUrl: 'http://calculator-execute-api-svc/api'
+  log:
+    tag: 0.0.1-localk8s
+    apiBaseUrl: 'http://calculator-log-api-svc/api'
+redis:
+  host: 'redis-master.redis.svc.cluster.local:6379'
+  password: '***' # get the password for redis and set it at runtime
+dapr:
+  useDaprState: true
+  stateStoreUrl: 'http://localhost:3500/v1.0/state/statestore'
+ui:
+  tag: 0.0.1-localk8s
+  serviceType: NodePort
+  servicePort: 9091
+  nodePort: 30335
+
+  ```
+
+**Task - install the calculator chart**
+
+> **_NOTE:__**: Use the same password and connection string (BASE64) generated previously.
+
+Additonally, this approach requires access to Redis
+
+``` PS
+$redisPasswordB64=$(kubectl get secret --namespace redis redis -o jsonpath="{.data.redis-password}")
+$redisPasswordB64
+```
+
+Install or upgrade chart
+
+``` PS
+helm upgrade --install calculator -f .\calculator\values.CallApi.yaml .\calculator `
+    --set db.password=$passwordB64 --set api.connectionString=$connectionStringB64 --set redis.password=$redisPasswordB64
+```
+
+**Task - verify deployments and test application**
+
+Use the same tasks as in previous exercices, including DB deployment deletion.
+
+Wehn deleting the database deployment, you won't encounter any improvement over the `Direct` approach, as the Log Api will still attempt to connect to a non-existent database.
+
+**Task - Check resiliency with DAPR state store**
+
+Update `useDaprState` variable to `true` in *values.CallApi.yaml* file:
+
+``` yaml
+...
+dapr:
+  useDaprState: true
+  stateStoreUrl: 'http://localhost:3500/v1.0/state/statestore'
+...
+```
+
+Upgrade the chart release
+
+``` PS
+helm upgrade --install calculator -f .\calculator\values.CallApi.yaml .\calculator `
+    --set db.password=$passwordB64 --set api.connectionString=$connectionStringB64 --set redis.password=$redisPasswordB64
+```
+
+Check the REDIS client in K8S (see the **Connect to Redis** task).
+
+Execute various commands to confirm the operation logs are stored in Redis now.
+
+``` sh
+KEYS *
+HGETALL <key>
+```
+
+
+
 
 ## Execute in K8S (local) - PubSub
 

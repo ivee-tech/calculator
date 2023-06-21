@@ -22,7 +22,7 @@ redis:
   host: 'redis-master.redis.svc.cluster.local:6379'
   password: '***' # get the password for redis and set it at runtime
 dapr:
-  useDaprState: true
+  useDaprState: false # change this value to true to use Dapr state store
   stateStoreUrl: 'http://localhost:3500/v1.0/state/statestore'
 ui:
   tag: 0.0.1-localk8s
