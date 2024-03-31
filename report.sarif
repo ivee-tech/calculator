@@ -1,0 +1,504 @@
+{
+  "$schema": "https://schemastore.azurewebsites.net/schemas/json/sarif-2.1.0-rtm.5.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "results": [
+        {
+          "ruleId": "AZR-000355",
+          "ruleIndex": 0,
+          "level": "error",
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/keyvault/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 0
+                },
+                "region": {
+                  "startLine": 133
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "AZR-000186",
+          "ruleIndex": 1,
+          "level": "error",
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/sql/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "AZR-000187",
+          "ruleIndex": 2,
+          "level": "error",
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/sql/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "AZR-000188",
+          "ruleIndex": 3,
+          "level": "error",
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/sql/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 52
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "AZR-000189",
+          "ruleIndex": 4,
+          "level": "error",
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/sql/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 1
+                },
+                "region": {
+                  "startLine": 52
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "TA-000015",
+          "ruleIndex": 5,
+          "level": "error",
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/webapp/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 2
+                },
+                "region": {
+                  "startLine": 81
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "TA-000016",
+          "ruleIndex": 6,
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/webapp/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 2
+                },
+                "region": {
+                  "startLine": 81
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "TA-000017",
+          "ruleIndex": 7,
+          "level": "error",
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/webapp/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 2
+                },
+                "region": {
+                  "startLine": 81
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "TA-000019",
+          "ruleIndex": 8,
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/webapp/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 2
+                },
+                "region": {
+                  "startLine": 69
+                }
+              }
+            }
+          ]
+        },
+        {
+          "ruleId": "AZR-000082",
+          "ruleIndex": 9,
+          "level": "error",
+          "message": {
+            "id": "default"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "infra/webapp/azuredeploy.json",
+                  "uriBaseId": "ROOTPATH",
+                  "index": 2
+                },
+                "region": {
+                  "startLine": 69
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "tool": {
+        "driver": {
+          "name": "Template Analyzer",
+          "organization": "Microsoft",
+          "fullName": "Template Analyzer",
+          "version": "0.5.1",
+          "informationUri": "https://github.com/Azure/template-analyzer",
+          "rules": [
+            {
+              "id": "AZR-000355",
+              "name": "Azure.KeyVault.Firewall",
+              "fullDescription": {
+                "text": "By default, Key Vault accept connections from clients on any network. To limit access to selected networks, you must first change the default action.\r\nAfter changing the default action from Allow to Deny, configure one or more rules to allow traffic. Traffic can be allowed from:\r\n\r\n- Azure services on the trusted service list.\r\n- IP address or CIDR range.\r\n- Private endpoint connections.\r\n- Azure virtual network subnets with a Service Endpoint.\r\n\r\nIf any of the following options are enabled you must also enable Allow trusted Microsoft services to bypass this firewall:\r\n\r\n- enabledForDeployment - Azure Virtual Machines for deployment.\r\n- enabledForDiskEncryption - Azure Disk Encryption for volume encryption.\r\n- enabledForTemplateDeployment - Azure Resource Manager for template deployment."
+              },
+              "help": {
+                "text": "Consider configuring Key Vault firewall to restrict network access to permitted clients only. Also consider enforcing this setting using Azure Policy."
+              },
+              "shortDescription": {
+                "text": "Configure Azure Key Vault firewall."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "By default, Key Vault accept connections from clients on any network. To limit access to selected networks, you must first change the default action.\r\nAfter changing the default action from Allow to Deny, configure one or more rules to allow traffic. Traffic can be allowed from:\r\n\r\n- Azure services on the trusted service list.\r\n- IP address or CIDR range.\r\n- Private endpoint connections.\r\n- Azure virtual network subnets with a Service Endpoint.\r\n\r\nIf any of the following options are enabled you must also enable Allow trusted Microsoft services to bypass this firewall:\r\n\r\n- enabledForDeployment - Azure Virtual Machines for deployment.\r\n- enabledForDiskEncryption - Azure Disk Encryption for volume encryption.\r\n- enabledForTemplateDeployment - Azure Resource Manager for template deployment."
+                }
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://azure.github.io/PSRule.Rules.Azure/en/rules/Azure.KeyVault.Firewall/"
+            },
+            {
+              "id": "AZR-000186",
+              "name": "Azure.SQL.DefenderCloud",
+              "fullDescription": {
+                "text": "Enable Microsoft Defender for Azure SQL logical server."
+              },
+              "help": {
+                "text": "Consider enabling Advanced Data Security and configuring Microsoft Defender for SQL logical servers."
+              },
+              "shortDescription": {
+                "text": "Use Advanced Threat Protection."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "Enable Microsoft Defender for Azure SQL logical server."
+                }
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://azure.github.io/PSRule.Rules.Azure/en/rules/Azure.SQL.DefenderCloud/"
+            },
+            {
+              "id": "AZR-000187",
+              "name": "Azure.SQL.Auditing",
+              "fullDescription": {
+                "text": "Auditing for Azure SQL Database tracks database events and writes them to an audit log. Audit logs help you find suspicious events, unusual activity, and trends."
+              },
+              "help": {
+                "text": "Consider enabling auditing for each SQL Database logical server and review reports on a regular basis."
+              },
+              "shortDescription": {
+                "text": "Enable auditing for Azure SQL DB server."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "Auditing for Azure SQL Database tracks database events and writes them to an audit log. Audit logs help you find suspicious events, unusual activity, and trends."
+                }
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://azure.github.io/PSRule.Rules.Azure/en/rules/Azure.SQL.Auditing/"
+            },
+            {
+              "id": "AZR-000188",
+              "name": "Azure.SQL.AAD",
+              "fullDescription": {
+                "text": "Azure SQL Database offer two authentication models, Azure Active Directory (AAD) and SQL logins. AAD authentication supports centialized identity management in addition to modern password protections. Some of the benefits of AAD authentication over SQL authentication including:\r\n\r\n- Support for Azure Multi-Factor Authentication (MFA).\r\n- Conditional-based access with Conditional Access.\r\n\r\nIt is also possible to disable SQL authentication entirely."
+              },
+              "help": {
+                "text": "Consider using Azure Active Directory (AAD) authentication with SQL databases. Additionally, consider disabling SQL authentication."
+              },
+              "shortDescription": {
+                "text": "Use AAD authentication with SQL databases."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "Azure SQL Database offer two authentication models, Azure Active Directory (AAD) and SQL logins. AAD authentication supports centialized identity management in addition to modern password protections. Some of the benefits of AAD authentication over SQL authentication including:\r\n\r\n- Support for Azure Multi-Factor Authentication (MFA).\r\n- Conditional-based access with Conditional Access.\r\n\r\nIt is also possible to disable SQL authentication entirely."
+                }
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://azure.github.io/PSRule.Rules.Azure/en/rules/Azure.SQL.AAD/"
+            },
+            {
+              "id": "AZR-000189",
+              "name": "Azure.SQL.MinTLS",
+              "fullDescription": {
+                "text": "The minimum version of TLS that Azure SQL Database servers accept is configurable. Older TLS versions are no longer considered secure by industry standards, such as PCI DSS.\r\nAzure lets you disable outdated protocols and require connections to use a minimum of TLS 1.2. By default, TLS 1.0, TLS 1.1, and TLS 1.2 is accepted."
+              },
+              "help": {
+                "text": "Consider configuring the minimum supported TLS version to be 1.2."
+              },
+              "shortDescription": {
+                "text": "Azure SQL DB server minimum TLS version."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "The minimum version of TLS that Azure SQL Database servers accept is configurable. Older TLS versions are no longer considered secure by industry standards, such as PCI DSS.\r\nAzure lets you disable outdated protocols and require connections to use a minimum of TLS 1.2. By default, TLS 1.0, TLS 1.1, and TLS 1.2 is accepted."
+                }
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://azure.github.io/PSRule.Rules.Azure/en/rules/Azure.SQL.MinTLS/"
+            },
+            {
+              "id": "TA-000015",
+              "name": "AppServiceWebApp.OnlyFTPS",
+              "fullDescription": {
+                "text": "Enable FTPS enforcement for enhanced security."
+              },
+              "help": {
+                "text": "Enable FTPS enforcement for enhanced security."
+              },
+              "shortDescription": {
+                "text": "FTPS only should be required in your web app."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "Enable FTPS enforcement for enhanced security."
+                }
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/Azure/template-analyzer/blob/main/docs/built-in-rules.md/#ta-000015-ftps-only-should-be-required-in-your-web-app"
+            },
+            {
+              "id": "TA-000016",
+              "name": "AppServiceWebApp.OnlyHTTPS",
+              "fullDescription": {
+                "text": "Web apps should require HTTPS to ensure connections are made to the expected server and data in transit is protected from network layer eavesdropping attacks."
+              },
+              "help": {
+                "text": "Use HTTPS to ensure server/service authentication and protect data in transit from network layer eavesdropping attacks."
+              },
+              "shortDescription": {
+                "text": "Web apps should only be accessible over HTTPS."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "Web apps should require HTTPS to ensure connections are made to the expected server and data in transit is protected from network layer eavesdropping attacks."
+                }
+              },
+              "helpUri": "https://github.com/Azure/template-analyzer/blob/main/docs/built-in-rules.md/#ta-000016-web-apps-should-only-be-accessible-over-https"
+            },
+            {
+              "id": "TA-000017",
+              "name": "AppServiceWebApp.UseLatestTLS",
+              "fullDescription": {
+                "text": "Web apps should require the latest TLS version."
+              },
+              "help": {
+                "text": "Upgrade to the latest TLS version."
+              },
+              "shortDescription": {
+                "text": "Latest TLS version should be used in your web app."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "Web apps should require the latest TLS version."
+                }
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://github.com/Azure/template-analyzer/blob/main/docs/built-in-rules.md/#ta-000017-latest-tls-version-should-be-used-in-your-web-app"
+            },
+            {
+              "id": "TA-000019",
+              "name": "AppServiceWebApp.UseManagedIdentity",
+              "fullDescription": {
+                "text": "For enhanced authentication security, use a managed identity. On Azure, managed identities eliminate the need for developers to have to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens."
+              },
+              "help": {
+                "text": "Use a managed identity for enhanced authentication security."
+              },
+              "shortDescription": {
+                "text": "Managed identity should be used in your web app."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "For enhanced authentication security, use a managed identity. On Azure, managed identities eliminate the need for developers to have to manage credentials by providing an identity for the Azure resource in Azure AD and using it to obtain Azure Active Directory (Azure AD) tokens."
+                }
+              },
+              "helpUri": "https://github.com/Azure/template-analyzer/blob/main/docs/built-in-rules.md/#ta-000019-managed-identity-should-be-used-in-your-web-app"
+            },
+            {
+              "id": "AZR-000082",
+              "name": "Azure.AppService.ManagedIdentity",
+              "fullDescription": {
+                "text": "Azure App Service apps must authenticate to Azure resources such as Azure SQL Databases. App Service can use managed identities to authenticate to Azure resource without storing credentials.\r\nUsing Azure managed identities have the following benefits:\r\n\r\n- You don't need to store or manage credentials.\r\nAzure automatically generates tokens and performs rotation.\r\n- You can use managed identities to authenticate to any Azure service that supports Azure AD authentication.\r\n- Managed identities can be used without any additional cost."
+              },
+              "help": {
+                "text": "Consider configuring a managed identity for each App Service app. Also consider using managed identities to authenticate to related Azure services."
+              },
+              "shortDescription": {
+                "text": "App Service apps uses a managed identity."
+              },
+              "messageStrings": {
+                "default": {
+                  "text": "Azure App Service apps must authenticate to Azure resources such as Azure SQL Databases. App Service can use managed identities to authenticate to Azure resource without storing credentials.\r\nUsing Azure managed identities have the following benefits:\r\n\r\n- You don't need to store or manage credentials.\r\nAzure automatically generates tokens and performs rotation.\r\n- You can use managed identities to authenticate to any Azure service that supports Azure AD authentication.\r\n- Managed identities can be used without any additional cost."
+                }
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "helpUri": "https://azure.github.io/PSRule.Rules.Azure/en/rules/Azure.AppService.ManagedIdentity/"
+            }
+          ]
+        }
+      },
+      "invocations": [
+        {
+          "startTimeUtc": "2023-07-08T05:08:22.995Z",
+          "endTimeUtc": "2023-07-08T05:10:07.281Z",
+          "toolExecutionNotifications": [
+            {
+              "message": {
+                "text": "Discovered 3 template-parameter pairs to analyze"
+              },
+              "level": "note"
+            },
+            {
+              "message": {
+                "text": "The parsing of the template output named sqlSvrFqdn failed"
+              }
+            },
+            {
+              "message": {
+                "text": "The parsing of the template output named siteUri failed"
+              }
+            }
+          ],
+          "executionSuccessful": true
+        }
+      ],
+      "originalUriBaseIds": {
+        "ROOTPATH": {
+          "uri": "file:///C:/s/calculator"
+        }
+      },
+      "artifacts": [
+        {
+          "location": {
+            "uri": "infra/keyvault/azuredeploy.json",
+            "uriBaseId": "ROOTPATH"
+          }
+        },
+        {
+          "location": {
+            "uri": "infra/sql/azuredeploy.json",
+            "uriBaseId": "ROOTPATH"
+          }
+        },
+        {
+          "location": {
+            "uri": "infra/webapp/azuredeploy.json",
+            "uriBaseId": "ROOTPATH"
+          }
+        }
+      ],
+      "columnKind": "utf16CodeUnits"
+    }
+  ]
+}

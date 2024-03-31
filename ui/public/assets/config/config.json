@@ -1,7 +1,8 @@
 {
-    "apiBaseUrl": "http://localhost:8080/api",
+    "apiBaseUrl": "http://4.147.253.79/api",
     "apiBaseUrl_localk8s": "http://localhost:30334/api",
     "apiBaseUrl_local": "http://localhost:8080/api",
+    "apiBaseUrl_ktb-aks": "http://4.147.253.79/api",
     "apiBaseUrl_devops": "__apiBaseUrl__"
 }
 

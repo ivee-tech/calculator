@@ -1,7 +1,7 @@
 # create helm chart
 helm create calculator
 
-$password = 'AAAbbb12345!@#$%'
+$password = '***'
 $connectionString = "Data Source=calculator-db-cip;Initial Catalog=CalculatorDB;User ID=sa;Password=$($password)"
 
 . ..\..\.scripts\base64.ps1

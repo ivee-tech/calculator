@@ -1,0 +1,18 @@
+parameters:
+- name: tag
+  type: string
+
+trigger:
+  none
+
+stages:
+- stage: Build_Web_Api_Image
+  jobs:
+  - template: '../templates/push-acr-image.yml'
+    parameters: 
+      dockerRegistryServiceConnection: acr85618
+      containerRegistry: acr85618.azurecr.io
+      imageRepository: calculator/calculator-api
+      tag: ${{ parameters.tag }}
+      appPath: './api/Calculator.Web.Api'
+      scanImage: false

@@ -1,0 +1,6 @@
+projectKey=calculator-ui
+serverUrl=http://20.53.204.34
+serverVersion=9.9.0.65466
+dashboardUrl=http://20.53.204.34/dashboard?id=calculator-ui
+ceTaskId=AYmUaiv3b46lnyWLM58o
+ceTaskUrl=http://20.53.204.34/api/ce/task?id=AYmUaiv3b46lnyWLM58o

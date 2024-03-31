@@ -11,7 +11,7 @@ docker network create calc-net
 docker inspect calc-net
 
 # Run the container instance in detached mode
-$dbPassword = 'AAAbbb12345!@#$%'
+$dbPassword = '***'
 docker run -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=$dbPassword -d -p 1434:1433 --name calc-db --network calc-net calculator-sqlserver:$($tag)
 
 # Check logs

@@ -11,7 +11,7 @@ services:
     - "1434:1433"
     environment:
     - ACCEPT_EULA=Y
-    - MSSQL_SA_PASSWORD=AAAbbb12345!@#$%
+    - MSSQL_SA_PASSWORD=***
     networks:
     - calc-net
 

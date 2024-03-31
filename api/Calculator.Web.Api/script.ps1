@@ -2,17 +2,19 @@
 $baseUrl = 'https://zz-calculator-api-dev-dr.azurewebsites.net' # cloud
 $baseUrl = 'http://localhost:8080' # container
 $baseUrl = 'https://localhost:7057' # VS
+$baseUrl = 'http://4.147.253.79' # ktb-aks LoadBalancer
 $url = "$($baseUrl)/api/Operation/execute"
 $data = @{ expression = $expression }
 $contentType = 'application/json'
 $method = 'POST'
 $body = $data | ConvertTo-Json
 $result = Invoke-WebRequest -Uri $url -Body $body -Method $method -ContentType $contentType
-$result
+$result.Content
 
 # container
 # from api sol folder
 $tag='0.0.1-local'
+$tag='0.0.1'
 docker build -t calculator-api:$($tag) --build-arg USE_ENV_VAR=true --build-arg CALL_TYPE=Direct -f .\Calculator.Web.Api\Dockerfile .
 $tag='0.0.1-localk8s-direct'
 docker build -t calculator-api:$($tag) --build-arg USE_ENV_VAR=true --build-arg CALL_TYPE=Direct -f .\Calculator.Web.Api\Dockerfile .
@@ -25,18 +27,25 @@ docker build -t calculator-api:$($tag) --build-arg USE_ENV_VAR=true --build-arg 
 docker network inspect calc-net
 
 # container connection string
-$dbPassword = 'AAAbbb12345!@#$%'
+$dbPassword = '***'
 # docker container
 $IP = '172.25.0.2' # get the IP from calc-db container, using docker network inspect calc-net
 $connectionString = "Data source=$($IP);Initial Catalog=CalculatorDB;User ID=sa;Password='$($dbPassword)'"
 # local dev
 $connectionString = "Data source=.;Initial Catalog=Calculator;Integrated Security=SSPI;"
+# remote
+$remoteUser = 'sqlusr001'
+$remotePassword = '***'
+$remoteSvr = 'demos-auea-dev-sql-calc'
+$remoteDb = 'demos-auea-dev-db-calc'
+$connectionString = "Server=tcp:$remoteSvr.database.windows.net,1433;Initial Catalog=$remoteDb;Persist Security Info=False;User ID=$remoteUser;Password='$remotePassword';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
 
 $env:CALC_DB_CONNECTIONSTRING = $connectionString
 [Environment]::SetEnvironmentVariable("CALC_DB_CONNECTIONSTRING", $env:CALC_DB_CONNECTIONSTRING, [System.EnvironmentVariableTarget]::User)
 
 # run container
 docker run --name calc-api -p 8080:80 -d -e "CALC_DB_CONNECTIONSTRING=$($env:CALC_DB_CONNECTIONSTRING)" --network calc-net calculator-api:$($tag)
+docker run --name calc-api -p 8080:80 -d -e "CALC_DB_CONNECTIONSTRING=$($connectionString)" calculator-api:$($tag)
 docker logs calc-api -f
 docker rm calc-api -f
 

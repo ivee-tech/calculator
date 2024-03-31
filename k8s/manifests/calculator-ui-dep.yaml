@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: calculator-ui-dep
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: calculator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: calculator-ui
+  template:
+    metadata:
+      labels:
+        tier: calculator-ui
+    spec:
+      containers:
+      - name: calculator-ui
+        image: {{ .Values.repo }}/calculator-ui:{{ .Values.ui.tag }}
+        ports:
+        - containerPort: 80
+        imagePullPolicy: Always
+            
+

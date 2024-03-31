@@ -10,7 +10,7 @@ services:
     ports:
     - "8080:80"
     environment:
-    - CALC_DB_CONNECTIONSTRING=Data Source=172.25.0.2;Initial Catalog=CalculatorDB;User ID=sa;Password=AAAbbb12345!@#$%
+    - CALC_DB_CONNECTIONSTRING=Data Source=172.25.0.2;Initial Catalog=CalculatorDB;User ID=sa;Password=***
     networks:
     - calc-net
   calc-ui:

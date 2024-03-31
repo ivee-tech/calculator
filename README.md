@@ -142,7 +142,7 @@ docker inspect calc-net
 Run the container instance in detached mode
 
 ``` PS
-$dbPassword = 'AAAbbb12345!@#$%'
+$dbPassword = '***'
 docker run -e ACCEPT_EULA=Y -e MSSQL_SA_PASSWORD=$dbPassword -d -p 1434:1433 --name calc-db --network calc-net calculator-sqlserver:$($tag)
 ```
 
@@ -200,7 +200,7 @@ docker network inspect calc-net
 
 Set connection string as environment variable. We will use this env var to pass it it to the running container.
 ``` PS
-$dbPassword = 'AAAbbb12345!@#$%'
+$dbPassword = '***'
 # docker container
 $IP = '<IP>' # get the IP address rom calc-db container, using docker network inspect calc-net
 $connectionString = "Data source=localhost,1434;Initial Catalog=CalculatorDB;User ID=sa;Password='$($dbPassword)'"
@@ -312,7 +312,7 @@ services:
     ports:
     - "8080:80"
     environment:
-    - CALC_DB_CONNECTIONSTRING=Data Source=<IP>;Initial Catalog=CalculatorDB;User ID=sa;Password=AAAbbb12345!@#$%
+    - CALC_DB_CONNECTIONSTRING=Data Source=<IP>;Initial Catalog=CalculatorDB;User ID=sa;Password=***
     networks:
     - calc-net
   calc-ui:
@@ -357,7 +357,7 @@ The helm chart has been created using a simple command:
 helm create calculator
 ```
 
-The chart is available under *.k8s/helm/calculator* folder.
+The chart is available under *k8s/helm/calculator* folder.
 
 The templates have been modified manually to use runtime values provided in the *values.[...].yaml* files.
 
@@ -390,7 +390,7 @@ For local K8S deployments, as Ingress and Load Balancer resources are not availa
 
 An alternative is to use port-forwarding to connect directly to the pods.
 
-The main chart file is located at *.k8s/helm/calculator/Chart.yaml*
+The main chart file is located at *k8s/helm/calculator/Chart.yaml*
 
 ``` yaml
 apiVersion: v2
@@ -474,7 +474,7 @@ helm uninstall calculator
 
 `Direct` approach allows direct operation execution and log to the database. This approach has the disadvantage that if, for example, the DB is not available, the response takes long and the user experience is not great. 
 
-Navigate to *.k8s/helm*
+Navigate to *k8s/helm*
 
 **Task - inspect values**
 
@@ -508,7 +508,7 @@ ui:
 Generate BASE64 for DB password and connection string
 
 ``` PS
-$password = 'AAAbbb12345!@#$%'
+$password = '***'
 $connectionString = "Data Source=calculator-db-cip;Initial Catalog=CalculatorDB;User ID=sa;Password=$($password)"
 
 . ..\..\.scripts\base64.ps1
@@ -869,3 +869,64 @@ helm upgrade --install calculator -f .\calculator\values.PubSub.yaml .\calculato
 ```
 
 Re-configure the DB and once the `OperationLogs` table is created, you'll find that it is immediately populated based on existing messages in the queue.
+
+
+# Deploy into pivate cluster
+
+- deploy infra
+- configure access: 
+  - enable MI on the jumpbox VM
+  - add role assignment(s):
+      - contributor permissions to the MI on the resource group `escs-lz01-SPOKE`
+      - Azure Kubernetes Service RBAC Cluster Admin role assignment on AKS 
+      - AcrPush to the container registry
+- deploy app using manifests
+
+install tooling on the jumpbox VM:
+- install az CLI
+``` bash
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+```
+https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt
+
+- install kubectl using the package manager
+``` bash
+# download
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+# validate (optional)
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+echo "$(cat kubectl.sha256)  kubectl" | sha256sum --check
+# it should display kubectl: OK
+# install
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
+
+OR
+
+- install kubectl using az CLI (installs `kubelogin` as well)
+``` bash
+# requires sudo
+sudo -i
+# then
+az aks install-cli
+```
+https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/
+
+- merge cluster config
+``` bash
+rg=escs-lz01-SPOKE
+aksName=aks-akscs-blue
+az aks get-credentials -g $rg -n $aksName
+```
+
+- login using MI
+``` bash
+export KUBECONFIG=~/.kube/config
+
+kubelogin convert-kubeconfig -l msi
+
+kubectl get nodes
+
+```
+https://azure.github.io/kubelogin/concepts/login-modes/msi.html
+
